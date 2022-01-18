@@ -1,7 +1,9 @@
 import time
-
 import requests
 from bs4 import BeautifulSoup
+from fake_useragent import UserAgent
+
+import config
 from .Item import Item
 
 
@@ -36,7 +38,7 @@ class Watcher:
         return res
 
     def check(self):
-        r = requests.get(self.link)
+        r = requests.get(self.link, headers={'User-Agent': UserAgent().chrome})
         html = BeautifulSoup(r.content, 'html.parser')
         items_list = set()
         for el in reversed(html.select('.kf-aXXX-1c982 section')):

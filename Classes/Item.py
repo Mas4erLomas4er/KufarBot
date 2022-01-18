@@ -1,5 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
+from fake_useragent import UserAgent
+
+import config
 
 
 class Item:
@@ -18,7 +21,7 @@ class Item:
         self.price = self.parse_price()
 
     def get_item(self):
-        r = requests.get(f'https://www.kufar.by/item/{self.id}')
+        r = requests.get(f'https://www.kufar.by/item/{self.id}', headers={'User-Agent': UserAgent().chrome})
         return BeautifulSoup(r.content, 'html.parser')
 
     def parse_title(self):
