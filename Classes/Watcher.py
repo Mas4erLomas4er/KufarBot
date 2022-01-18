@@ -17,7 +17,7 @@ class Watcher:
 
         self.go = True
         while self.go:
-            res = self.get_updates()
+            res = self.check()
             for el in res:
                 item = Item(el)
                 self.event(item.stringify())
