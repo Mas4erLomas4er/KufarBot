@@ -29,7 +29,7 @@ class Item:
 
     def parse_price(self):
         try:
-            return self.unparsed.select('.kf-Ejgv-15d2b')[0].text
+            return self.unparsed.select('div[itemprop=offers] span')[0].text
         except IndexError:
             return "Unable to get price"
 
