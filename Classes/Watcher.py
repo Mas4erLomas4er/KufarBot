@@ -1,10 +1,5 @@
-import time
-
-import aiohttp
 import asyncio
-import requests
 from bs4 import BeautifulSoup
-from fake_useragent import UserAgent
 
 import config
 from . import Async

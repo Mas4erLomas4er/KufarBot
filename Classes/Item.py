@@ -1,12 +1,3 @@
-import aiohttp
-import requests
-from bs4 import BeautifulSoup
-from fake_useragent import UserAgent
-
-import config
-from Classes import Async
-
-
 class Item:
     def __init__(self, unparsed):
         self.unparsed = unparsed
