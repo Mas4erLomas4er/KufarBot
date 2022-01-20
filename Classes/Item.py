@@ -1,38 +1,38 @@
+import aiohttp
 import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 
 import config
+from Classes import Async
 
 
 class Item:
-    @staticmethod
-    def get_id(unparsed):
-        return unparsed.select('.kf-TbTm-0178f')[0]['href'][-9:]
-
-    @staticmethod
-    def check_premium(unparsed):
-        return len(unparsed.select('.kf-Tbrz-ffe9e')) > 0
-
-    def __init__(self, item_id):
-        self.id = item_id
-        self.unparsed = self.get_item()
+    def __init__(self, unparsed):
+        self.unparsed = unparsed
+        self.premium = self.check_premium()
+        self.id = self.parse_id()
         self.title = self.parse_title()
         self.price = self.parse_price()
 
-    def get_item(self):
-        r = requests.get(f'https://www.kufar.by/item/{self.id}', headers={'User-Agent': UserAgent().chrome})
-        return BeautifulSoup(r.content, 'html.parser')
+    def check_premium(self):
+        return len(self.unparsed.select('.kf-Tbrz-ffe9e')) > 0
+
+    def parse_id(self):
+        try:
+            return self.unparsed.select('.kf-TbTm-0178f')[0]['href'][-9:]
+        except IndexError:
+            return 0
 
     def parse_title(self):
         try:
-            return self.unparsed.select('h1')[0].text
+            return self.unparsed.select('.kf-TbAJ-ac736')[0].text
         except IndexError:
             return "Unable to get title"
 
     def parse_price(self):
         try:
-            return self.unparsed.select('div[itemprop=offers] span')[0].text
+            return self.unparsed.select('.kf-TbHW-7ea75 span')[0].text
         except IndexError:
             return "Unable to get price"
 

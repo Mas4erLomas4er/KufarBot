@@ -1,9 +1,13 @@
 import time
+
+import aiohttp
+import asyncio
 import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 
 import config
+from . import Async
 from .Item import Item
 
 
@@ -14,40 +18,36 @@ class Watcher:
         self.go = False
         self.event = event
 
-    def start_watching(self, interval):
-        self.current = self.check()
-
+    async def start_watching(self, interval=config.INTERVAL):
+        res = await self.check()
+        self.current = set(el.id for el in res)
         self.go = True
         while self.go:
-            res = self.check()
+            res = await self.get_updates()
             for el in res:
-                item = Item(el)
-                self.event(item.stringify())
-            time.sleep(interval)
+                if not self.go:
+                    break
+                await self.event(el.stringify())
+            await asyncio.sleep(interval)
 
     def stop_watching(self):
         self.go = False
 
-    def get_updates(self):
-        new = self.check()
+    async def get_updates(self):
+        new = await self.check()
         res = set()
         for el in new:
-            if not (el in self.current):
+            if not (el.id in self.current):
                 res.add(el)
-        self.current = new
+        self.current = set(el.id for el in new)
         return res
 
-    def check(self):
-        r = requests.get(self.link, headers={'User-Agent': UserAgent().chrome})
-        html = BeautifulSoup(r.content, 'html.parser')
-        items_list = set()
+    async def check(self):
+        html = await Async.get(self.link, lambda r: BeautifulSoup(r, 'html.parser'))
+        item_list = list()
         for el in reversed(html.select('.kf-aXXX-1c982 section')):
-            if Item.check_premium(el):
+            item = Item(el)
+            if item.premium:
                 continue
-            try:
-                item_id = Item.get_id(el)
-                items_list.add(item_id)
-            except requests.RequestException:
-                self.event('Unable to get item')
-
-        return items_list
+            item_list.append(item)
+        return item_list

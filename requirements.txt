@@ -1,5 +1,5 @@
 asyncio~=3.4.3
 requests~=2.27.1
 beautifulsoup4~=4.10.0
-pyTelegramBotAPI~=4.3.1
-fake-useragent
+aiohttp~=3.8.1
+aiogram~=2.18
