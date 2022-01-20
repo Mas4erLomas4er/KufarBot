@@ -2,7 +2,7 @@ import asyncio
 from bs4 import BeautifulSoup
 
 import config
-from . import Async
+import async_helper
 from .Item import Item
 
 
@@ -38,7 +38,7 @@ class Watcher:
         return res
 
     async def check(self):
-        html = await Async.get(self.link, lambda r: BeautifulSoup(r, 'html.parser'))
+        html = await async_helper.get(self.link, lambda r: BeautifulSoup(r, 'html.parser'))
         item_list = list()
         for el in reversed(html.select('.kf-aXXX-1c982 section')):
             item = Item(el)

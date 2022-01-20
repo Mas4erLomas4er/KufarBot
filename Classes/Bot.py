@@ -1,7 +1,7 @@
 import logging
 from aiogram import Bot as IOBot, Dispatcher, executor, types
 
-from Classes import Async
+import async_helper
 from Classes.Watcher import Watcher
 
 
@@ -16,7 +16,7 @@ class Bot:
         self.dp.message_handler(commands=['set'])(self.set_cmd)
         self.dp.message_handler(commands=['stop'])(self.stop_cmd)
 
-        Async.loop.run_until_complete(executor.start_polling(self.dp, skip_updates=True))
+        async_helper.loop.run_until_complete(executor.start_polling(self.dp, skip_updates=True))
 
     async def start_cmd(self, user_msg: types.Message):
         await user_msg.answer('Hello! Welcome to Kufar Bot!\nYou can follow the updates of your favourite categories for FREE!')
