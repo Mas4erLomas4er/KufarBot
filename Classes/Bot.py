@@ -8,6 +8,7 @@ from Classes.Watcher import Watcher
 class Bot:
     def __init__(self, token):
         logging.basicConfig(level=logging.INFO)
+
         self.bot = IOBot(token=token)
         self.dp = Dispatcher(self.bot)
         self.watchers = dict()

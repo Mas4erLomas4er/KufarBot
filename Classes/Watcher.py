@@ -40,7 +40,7 @@ class Watcher:
     async def check(self):
         html = await async_helper.get(self.link, lambda r: BeautifulSoup(r, 'html.parser'))
         item_list = list()
-        for el in reversed(html.select('.kf-aXXX-1c982 section')):
+        for el in reversed(html.select('section')[1:]):
             item = Item(el)
             if item.premium:
                 continue
