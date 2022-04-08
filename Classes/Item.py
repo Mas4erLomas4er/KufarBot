@@ -7,7 +7,7 @@ class Item:
         self.price = self.parse_price()
 
     def check_premium(self):
-        return len(self.unparsed.select('img')) == 2
+        return len(self.unparsed.select('div')[0].select('img')) == 2
 
     def parse_id(self):
         try:
